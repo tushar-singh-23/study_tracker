@@ -2,45 +2,32 @@
 {% block content %}
 <div class="container mt-4">
     <h2 class="mb-4">Your Progress</h2>
-    {% for topic, percentage in progress.items() %}
-        <div class="mb-3">
-            <h5>{{ topic }}: {{ percentage | round(2) }}%</h5>
-            <div class="progress">
-                <div class="progress-bar bg-success" role="progressbar" style="width: {{ percentage }}%;" aria-valuenow="{{ percentage }}" aria-valuemin="0" aria-valuemax="100"></div>
-            </div>
+    <div class="row">
+        {% for topic, data in progress.items() %}
+        <div class="col-md-4 mb-4">
+            <a href="{{ url_for('main.view_topic', topic_name=topic) }}" class="text-decoration-none">
+                <div class="card progress-card">
+                    <div class="card-body text-center">
+                        <div class="progress-circle">
+                            <svg viewBox="0 0 36 36" class="circular-chart">
+                                <path class="circle-bg"
+                                      d="M18 2.0845
+                                         a 15.9155 15.9155 0 0 1 0 31.831
+                                         a 15.9155 15.9155 0 0 1 0 -31.831" />
+                                <path class="circle"
+                                      stroke-dasharray="{{ data.completion_percentage | round(2) }}, 100"
+                                      d="M18 2.0845
+                                         a 15.9155 15.9155 0 0 1 0 31.831
+                                         a 15.9155 15.9155 0 0 1 0 -31.831" />
+                                <text x="18" y="20.35" class="percentage">{{ data.completion_percentage | round(0) }}%</text>
+                            </svg>
+                        </div>
+                        <h5 class="card-title mt-3">{{ topic }}</h5>
+                    </div>
+                </div>
+            </a>
         </div>
-    {% endfor %}
-
-    <h2 class="mb-4">Your Lessons</h2>
-    <table class="table table-hover">
-        <thead>
-            <tr>
-                <th>Topic</th>
-                <th>Lesson</th>
-                <th>Confidence Level</th>
-                <th>Next Review Date</th>
-                <th>Last Studied</th>
-                <th>Notes</th>
-                <th>Actions</th>
-            </tr>
-        </thead>
-        <tbody>
-            {% for lesson in lessons %}
-            <tr>
-                <td>{{ lesson.topic }}</td>
-                <td>{{ lesson.lesson_name }}</td>
-                <td>{{ lesson.confidence_level }}</td>
-                <td>{{ lesson.next_review_date or 'N/A' }}</td>
-                <td>{{ lesson.last_studied or 'N/A' }}</td>
-                <td>{{ lesson.notes or '' }}</td>
-                <td>
-                    <a href="{{ url_for('main.update_lesson', lesson_id=lesson.lesson_id) }}" class="btn btn-sm btn-primary">
-                        <i class="fas fa-edit"></i> Update
-                    </a>
-                </td>
-            </tr>
-            {% endfor %}
-        </tbody>
-    </table>
+        {% endfor %}
+    </div>
 </div>
 {% endblock %}

@@ -28,21 +28,31 @@ def calculate_next_review_date(confidence_level, last_studied, previous_interval
     return next_review_date, interval, ease_factor
 
 def calculate_progress():
+    """Calculate the completion percentage for each topic.
+
+    Returns:
+        Dict[str, float]: A dictionary mapping topics to their completion percentages.
+    """
     lessons_from_csv = load_lessons_from_csv()
     topics = {}
     for lesson in lessons_from_csv:
         topic = lesson['topic']
         if topic not in topics:
-            topics[topic] = {'total': 0, 'confidence_sum': 0}
-        topics[topic]['total'] += 10  # Max confidence per lesson is 10
+            topics[topic] = {'total_lessons': 0, 'completed_lessons': 0}
+        topics[topic]['total_lessons'] += 1
         db_lesson = Lesson.query.filter_by(lesson_id=lesson['lesson_id']).first()
-        if db_lesson:
-            topics[topic]['confidence_sum'] += db_lesson.confidence_level
+        if db_lesson and db_lesson.confidence_level > 0:
+            topics[topic]['completed_lessons'] += 1
     progress = {}
     for topic, data in topics.items():
-        completion_percentage = (data['confidence_sum'] / data['total']) * 100 if data['total'] > 0 else 0
-        progress[topic] = completion_percentage
+        completion_percentage = (data['completed_lessons'] / data['total_lessons']) * 100
+        progress[topic] = {
+            'completion_percentage': completion_percentage,
+            'total_lessons': data['total_lessons'],
+            'completed_lessons': data['completed_lessons']
+        }
     return progress
+
 
 def get_daily_schedule(date):
     is_weekend = date.weekday() >= 5

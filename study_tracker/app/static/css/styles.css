@@ -1,0 +1,171 @@
+/* Reset */
+* {
+    box-sizing: border-box;
+}
+
+/* General Styles */
+body {
+    font-family: 'Roboto', sans-serif;
+    background-color: #f5f7fa;
+    margin: 0;
+    padding: 0;
+}
+
+/* Navbar */
+.navbar {
+    background-color: #2C3E50;
+}
+
+.navbar-brand {
+    font-weight: bold;
+}
+
+.nav-link {
+    color: #ecf0f1 !important;
+}
+
+.nav-link:hover {
+    color: #bdc3c7 !important;
+}
+
+/* Progress Cards */
+.progress-card {
+    background-color: #ffffff;
+    border: none;
+    border-radius: 10px;
+    overflow: hidden;
+    transition: transform 0.3s ease;
+    animation: fadeInUp 0.5s ease forwards;
+    opacity: 0;
+}
+
+.progress-card:nth-child(1) {
+    animation-delay: 0s;
+}
+.progress-card:nth-child(2) {
+    animation-delay: 0.1s;
+}
+.progress-card:nth-child(3) {
+    animation-delay: 0.2s;
+}
+/* Add more delays as needed */
+
+.progress-card:hover {
+    transform: translateY(-10px);
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+}
+
+/* Animation */
+@keyframes fadeInUp {
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* Progress Circle */
+.circular-chart {
+    max-width: 80px;
+    max-height: 80px;
+    margin: 0 auto;
+}
+
+.circular-chart .circle-bg {
+    fill: none;
+    stroke: #ecf0f1;
+    stroke-width: 3.8;
+}
+
+.circular-chart .circle {
+    fill: none;
+    stroke-width: 3.8;
+    stroke-linecap: round;
+    stroke: #3498db;
+    animation: progressAnimation 1s ease-out forwards;
+}
+
+.circular-chart .percentage {
+    fill: #2c3e50;
+    font-size: 0.5em;
+    text-anchor: middle;
+    dominant-baseline: central;
+}
+
+@keyframes progressAnimation {
+    from {
+        stroke-dasharray: 0 100;
+    }
+    to {
+        stroke-dasharray: var(--percent), 100;
+    }
+}
+
+/* Card Title */
+.card-title {
+    font-size: 18px;
+    color: #2C3E50;
+    margin-top: 10px;
+}
+
+/* Footer */
+.footer {
+    background-color: #2C3E50;
+    color: #ecf0f1;
+    padding: 15px 0;
+    position: relative; /* Remove fixed positioning */
+    bottom: 0;
+    width: 100%;
+    margin-top: 20px; /* Add space between content and footer */
+}
+
+/* Ensure the body takes at least full viewport height */
+html, body {
+    height: 100%;
+}
+
+body {
+    display: flex;
+    flex-direction: column;
+}
+
+main {
+    flex: 1;
+}
+
+/* Adjust card size on smaller screens */
+@media (max-width: 576px) {
+    .col-md-4 {
+        max-width: 100%;
+        flex: 0 0 100%;
+    }
+}
+
+.btn-primary {
+    background-color: #3498db;
+    border-color: #3498db;
+}
+
+.btn-primary:hover {
+    background-color: #2980b9;
+    border-color: #2980b9;
+}
+
+.btn-success {
+    background-color: #2ecc71;
+    border-color: #2ecc71;
+}
+
+.btn-success:hover {
+    background-color: #27ae60;
+    border-color: #27ae60;
+}
+
+.btn-secondary {
+    background-color: #95a5a6;
+    border-color: #95a5a6;
+}
+
+.btn-secondary:hover {
+    background-color: #7f8c8d;
+    border-color: #7f8c8d;
+}

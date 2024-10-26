@@ -1,0 +1,35 @@
+{% extends 'base.html' %}
+{% block content %}
+<div class="container mt-4">
+    <h2 class="mb-4">{{ topic_name }}</h2>
+    <table class="table table-hover">
+        <thead>
+            <tr>
+                <th>Lesson</th>
+                <th>Confidence Level</th>
+                <th>Next Review Date</th>
+                <th>Last Studied</th>
+                <th>Notes</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for lesson in lessons %}
+            <tr>
+                <td>{{ lesson.lesson_name }}</td>
+                <td>{{ lesson.confidence_level }}</td>
+                <td>{{ lesson.next_review_date or 'N/A' }}</td>
+                <td>{{ lesson.last_studied or 'N/A' }}</td>
+                <td>{{ lesson.notes or '' }}</td>
+                <td>
+                    <a href="{{ url_for('main.update_lesson', lesson_id=lesson.lesson_id) }}" class="btn btn-sm btn-primary">
+                        <i class="fas fa-edit"></i> Update
+                    </a>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    <a href="{{ url_for('main.index') }}" class="btn btn-secondary"><i class="fas fa-arrow-left"></i> Back</a>
+</div>
+{% endblock %}

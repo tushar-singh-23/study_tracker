@@ -11,21 +11,7 @@ bp = Blueprint('main', __name__)
 def index():
     lessons_from_csv = load_lessons_from_csv()
     progress = calculate_progress()
-    lessons = []
-    for csv_lesson in lessons_from_csv:
-        db_lesson = Lesson.query.filter_by(lesson_id=csv_lesson['lesson_id']).first()
-        if db_lesson:
-            lesson_data = {
-                'lesson_id': csv_lesson['lesson_id'],
-                'topic': csv_lesson['topic'],
-                'lesson_name': csv_lesson['lesson_name'],
-                'confidence_level': db_lesson.confidence_level,
-                'next_review_date': db_lesson.next_review_date,
-                'last_studied': db_lesson.last_studied,
-                'notes': db_lesson.notes
-            }
-            lessons.append(lesson_data)
-    return render_template('index.html', lessons=lessons, progress=progress, datetime=datetime)
+    return render_template('index.html', progress=progress, datetime=datetime)
 
 @bp.route('/add_lesson', methods=['GET', 'POST'])
 def add_lesson():
@@ -49,7 +35,7 @@ def add_lesson():
         db.session.add(new_lesson)
         db.session.commit()
         return redirect(url_for('index'))
-    return render_template('add_lesson.html')
+    return render_template('lessons/add.html')
 
 @bp.route('/update_lesson/<lesson_id>', methods=['GET', 'POST'])
 def update_lesson(lesson_id):
@@ -80,7 +66,7 @@ def update_lesson(lesson_id):
     elif request.method == 'GET':
         form.confidence_level.date = db_lesson.confidence_level
         form.notes.data = db_lesson.notes
-    return render_template('update_lesson.html', lesson=db_lesson, lesson_details=lesson_details, datetime=datetime)
+    return render_template('lessons/update.html', lesson=db_lesson, lesson_details=lesson_details, datetime=datetime, form=form)
 
 @bp.route('/set_new_lesson', methods=['POST'])
 def set_new_lesson():
@@ -96,7 +82,7 @@ def view_study_dates(lesson_id):
     lesson = Lesson.query.filter_by(lesson_id=lesson_id).first_or_404()
     study_dates = StudyDate.query.filter_by(lesson_id=lesson_id).order_by(StudyDate.date.desc()).all()
     lesson_details = next((l for l in load_lessons_from_csv() if l['lesson_id'] == lesson_id), None)
-    return render_template('view_study_dates.html', lesson=lesson, study_dates=study_dates, lesson_details=lesson_details)
+    return render_template('lessons/view.html', lesson=lesson, study_dates=study_dates, lesson_details=lesson_details)
 
 @bp.route('/schedule', methods=['GET', 'POST'])
 def schedule():
@@ -113,3 +99,24 @@ def schedule():
             db.session.commit()
             return redirect(url_for('schedule'))
     return render_template('schedule/schedule.html', revisions=revisions, new_lessons=new_lessons, available_new_lessons=available_new_lessons, datetime=datetime)
+
+@bp.route('/topic/<topic_name>')
+def view_topic(topic_name) -> render_template:
+    """
+    Display all lessons within a specific topic.
+    """
+    lessons_from_csv = load_lessons_from_csv()
+    topic_lessons = []
+    for lesson in lessons_from_csv:
+        if lesson['topic'] == topic_name:
+            db_lesson = Lesson.query.filter_by(lesson_id=lesson['lesson_id']).first()
+            lesson_data = {
+                'lesson_id': lesson['lesson_id'],
+                'lesson_name': lesson['lesson_name'],
+                'confidenc_level': db_lesson.confidence_level if db_lesson else 0,
+                'next_review_date': db_lesson.next_review_date if db_lesson else None,
+                'last_studied': db_lesson.last_studied if db_lesson else None,
+                'notes': db_lesson.notes if db_lesson else ''
+            }
+            topic_lessons.append(lesson_data)
+    return render_template('lessons/topic_lessons.html', topic_name=topic_name, lessons=topic_lessons, datetime=datetime)
