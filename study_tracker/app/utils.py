@@ -74,3 +74,15 @@ def get_daily_schedule(date):
                 break  # Only get the next lesson
     scheduled_new_lessons = Lesson.query.filter_by(scheduled_for_today=True).all()
     return revisions, scheduled_new_lessons
+
+# Ensure all lessons exist in the database
+def initialize_lessons(db):
+    lessons = load_lessons_from_csv()
+    for lesson in lessons:
+        existing_lesson = Lesson.query.filter_by(lesson_id=lesson['lesson_id']).first()
+        if not existing_lesson:
+            new_lesson = Lesson(
+                lesson_id=lesson['lesson_id']
+            )
+            db.session.add(new_lesson)
+    db.session.commit()

@@ -112,4 +112,4 @@ def schedule():
             db_lesson.scheduled_for_today = True
             db.session.commit()
             return redirect(url_for('schedule'))
-    return render_template('schedule.html', revisions=revisions, new_lessons=new_lessons, available_new_lessons=available_new_lessons, datetime=datetime)
+    return render_template('schedule/schedule.html', revisions=revisions, new_lessons=new_lessons, available_new_lessons=available_new_lessons, datetime=datetime)

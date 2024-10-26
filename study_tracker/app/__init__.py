@@ -13,6 +13,12 @@ def create_app(config_class=Config):
     db.init_app(app)
     migrate.init_app(app, db)
 
+    with app.app_context():
+        from app.utils import initialize_lessons
+        db.create_all()
+        initialize_lessons(db)
+
+    # Register blueprints and other setup
     from app.routes import bp as main_bp
     app.register_blueprint(main_bp)
 
