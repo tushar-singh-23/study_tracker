@@ -1,4 +1,4 @@
-{% extends 'layout.html' %}
+{% extends 'base.html' %}
 {% block content %}
 <div class="container mt-4">
     <h2 class="mb-4">Your Progress</h2>
@@ -34,7 +34,7 @@
                 <td>{{ lesson.last_studied or 'N/A' }}</td>
                 <td>{{ lesson.notes or '' }}</td>
                 <td>
-                    <a href="{{ url_for('update_lesson', lesson_id=lesson.lesson_id) }}" class="btn btn-sm btn-primary">
+                    <a href="{{ url_for('main.update_lesson', lesson_id=lesson.lesson_id) }}" class="btn btn-sm btn-primary">
                         <i class="fas fa-edit"></i> Update
                     </a>
                 </td>

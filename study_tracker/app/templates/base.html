@@ -2,11 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Study Tracker - {{ title | default('Home') }}</title>
-    <!-- Include Bootstrap CSS for a modern UI -->
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css">
-    <!-- Your custom styles -->
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}">
+    <title>{{ title | default('Study Tracker') }}</title>
     <!-- Bootstrap CSS -->
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css">
     <!-- Font Awesome for Icons -->
@@ -15,31 +11,12 @@
     <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}">
 </head>
 <body>
-    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
-        <a class="navbar-brand" href="{{ url_for('index') }}">Study Tracker</a>
-        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
-            <span class="navbar-toggler-icon"></span>
-        </button>
-        <div class="collapse navbar-collapse" id="navbarNav">
-            <ul class="navbar-nav">
-                <li class="nav-item{% if request.endpoint == 'index' %} active{% endif %}">
-                    <a class="nav-link" href="{{ url_for('index') }}">Home</a>
-                </li>
-                <li class="nav-item{% if request.endpoint == 'schedule' %} active{% endif %}">
-                    <a class="nav-link" href="{{ url_for('schedule') }}">Today's Schedule</a>
-                </li>
-            </ul>
-        </div>
-    </nav>
-    {% block content %}{% endblock %}
-    <!-- Footer -->
-    <footer class="footer bg-dark text-white mt-auto py-3">
-        <div class="container text-center">
-            <span>© {{ datetime.utcnow().year }} Study Tracker</span>
-        </div>
-    </footer>
-    <!-- Include Bootstrap JS for interactivity -->
-    <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"></script>
+    {% include 'navbar.html' %}
+    <main role="main" class="container mt-4">
+        {% block content %}{% endblock %}
+    </main>
+    {% include 'footer.html' %}
+    <!-- Scripts -->
     <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.0/dist/js/bootstrap.bundle.min.js"></script>
 </body>
