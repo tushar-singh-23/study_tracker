@@ -1,0 +1,58 @@
+body {
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+}
+
+header {
+    background-color: #007bff;
+    color: white;
+}
+
+header h1 {
+    margin: 0;
+}
+
+nav a {
+    margin-right: 15px;
+    color: white;
+    text-decoration: none;
+}
+
+main {
+    flex: 1;
+}
+
+.navbar-brand {
+    font-weight: bold;
+}
+
+.table-hover tbody tr:hover {
+    background-color: #f1f1f1;
+}
+
+.footer {
+    position: fixed;
+    bottom: 0;
+    width: 100%;
+}
+
+.progress-bar {
+    background-color: #28a745;
+}
+
+.confidence-input {
+    width: 60px;
+}
+
+.confidence-low {
+    background-color: #f8d7da;  /* Red-ish */
+}
+
+.confidence-medium {
+    background-color: #fff3cd;  /* Yellow-ish */
+}
+
+.confidence-high {
+    background-color: #d4edda;  /* Green-ish */
+}

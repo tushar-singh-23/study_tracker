@@ -1,0 +1,23 @@
+{% extends 'layout.html' %}
+{% block content %}
+<h2>Add New Lesson</h2>
+<form method="post">
+    <div class="form-group">
+        <label for="topic">Topic</label>
+        <input type="text" class="form-control" name="topic" id="topic" required>
+    </div>
+    <div class="form-group">
+        <label for="lesson_name">Lesson Name</label>
+        <input type="text" class="form-control" name="lesson_name" id="lesson_name" required>
+    </div>
+    <div class="form-group">
+        <label for="confidence_level">Confidence Level (1-10)</label>
+        <input type="number" class="form-control" name="confidence_level" id="confidence_level" min="1" max="10" required>
+    </div>
+    <div class="form-group">
+        <label for="last_studied">Date Studied</label>
+        <input type="date" class="form-control" name="last_studied" id="last_studied" required>
+    </div>
+    <button type="submit" class="btn btn-success">Add Lesson</button>
+</form>
+{% endblock %}

@@ -1,0 +1,12 @@
+{% extends 'layout.html' %}
+{% block content %}
+<h2>Study Dates for {{ lesson_details.lesson_name }} ({{ lesson_details.topic }})</h2>
+<ul class="list-group">
+    {% for sd in study_dates %}
+    <li class="list-group-item">{{ sd.date }}</li>
+    {% else %}
+    <li class="list-group-item">No study dates recorded.</li>
+    {% endfor %}
+</ul>
+<a href="{{ url_for('index') }}" class="btn btn-secondary mt-3">Back to Lessons</a>
+{% endblock %}

@@ -1,0 +1,44 @@
+{% extends 'layout.html' %}
+{% block content %}
+<div class="container mt-4">
+    <h2>Today's Schedule</h2>
+
+    <h3>Revisions</h3>
+    {% if revisions %}
+        <ul class="list-group mb-4">
+            {% for lesson in revisions %}
+            <li class="list-group-item">
+                {{ lesson.lesson_name }} ({{ lesson.topic }}) - Confidence Level: {{ lesson.confidence_level }}
+                <a href="{{ url_for('update_lesson', lesson_id=lesson.lesson_id) }}" class="btn btn-sm btn-primary float-right"><i class="fas fa-edit"></i> Update</a>
+            </li>
+            {% endfor %}
+        </ul>
+    {% else %}
+        <p>No revisions scheduled for today.</p>
+    {% endif %}
+
+    <h3>New Content</h3>
+    {% if new_lessons %}
+        <ul class="list-group mb-4">
+            {% for lesson in new_lessons %}
+            <li class="list-group-item">
+                {{ lesson.lesson_name }} ({{ lesson.topic }})
+                <a href="{{ url_for('update_lesson', lesson_id=lesson.lesson_id) }}" class="btn btn-sm btn-success float-right"><i class="fas fa-book-reader"></i> Study</a>
+            </li>
+            {% endfor %}
+        </ul>
+    {% endif %}
+    
+    <form method="post" class="mt-4">
+        <div class="form-group">
+            <label for="selected_lesson">Select New Lesson to Study</label>
+            <select name="selected_lesson" id="selected_lesson" class="form-control">
+                {% for lesson in available_new_lessons %}
+                    <option value="{{ lesson.lesson_id }}">{{ lesson.lesson_name }} ({{ lesson.topic }})</option>
+                {% endfor %}
+            </select>
+        </div>
+        <button type="submit" class="btn btn-success"><i class="fas fa-plus-circle"></i> Add to Today's Schedule</button>
+    </form>
+</div>
+{% endblock %}
