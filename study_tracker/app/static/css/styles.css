@@ -169,3 +169,34 @@ main {
     background-color: #7f8c8d;
     border-color: #7f8c8d;
 }
+
+/* Make the row look clickable */
+.lesson-row {
+    cursor: pointer;
+}
+
+.lesson-row:hover {
+    background-color: #f2f2f2;
+}
+
+/* Confidence Level Stars */
+.confidence-level {
+    display: flex;
+    align-items: center;
+}
+
+.confidence-star {
+    font-size: 18px;
+    color: #ccc;
+    cursor: pointer;
+    margin-right: 2px;
+}
+
+.confidence-star.selected {
+    color: #f1c40f; /* Gold color for selected stars */
+}
+
+.confidence-star:hover,
+.confidence-star:hover ~ .confidence-star {
+    color: #f1c40f;
+}

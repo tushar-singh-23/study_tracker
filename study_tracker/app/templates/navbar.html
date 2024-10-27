@@ -4,12 +4,15 @@
         <span class="navbar-toggler-icon"></span>
     </button>
     <div class="collapse navbar-collapse" id="navbarNav">
-        <ul class="navbar-nav">
+        <ul class="navbar-nav ml-auto">
             <li class="nav-item{% if request.endpoint == 'main.index' %} active{% endif %}">
                 <a class="nav-link" href="{{ url_for('main.index') }}">Home</a>
             </li>
             <li class="nav-item{% if request.endpoint == 'main.schedule' %} active{% endif %}">
                 <a class="nav-link" href="{{ url_for('main.schedule') }}">Today's Schedule</a>
+            </li>
+            <li class="nav-item{% if request.endpoint == 'main.settings' %} active{% endif %}">
+                <a class="nav-link" href="{{ url_for('main.settings') }}">Settings</a>
             </li>
         </ul>
     </div>

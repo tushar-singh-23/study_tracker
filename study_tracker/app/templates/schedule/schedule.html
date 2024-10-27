@@ -3,6 +3,21 @@
 <div class="container mt-4">
     <h2>Today's Schedule</h2>
 
+    {% if study_plan %}
+        <h3>Suggested Study Time: {{ study_plan.daily_study_time_needed | round(2) }} hours</h3>
+        <h3>Suggested Topics</h3>
+        <ul class="list-group mb-4">
+            {% for lesson in study_plan.suggested_lessons %}
+            <li class="list-group-item">
+                {{ lesson.lesson_name }} ({{ lesson.topic }})
+                <a href="{{ url_for('main.update_lesson', lesson_id=lesson.lesson_id) }}" class="btn btn-sm btn-success float-right"><i class="fas fa-book-reader"></i> Study</a>
+            </li>
+            {% endfor %}
+        </ul>
+    {% else %}
+        <p>No study suggestions available.</p>
+    {% endif %}
+
     <h3>Revisions</h3>
     {% if revisions %}
         <ul class="list-group mb-4">
