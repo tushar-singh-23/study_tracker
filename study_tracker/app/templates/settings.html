@@ -1,0 +1,22 @@
+{% extends 'base.html' %}
+{% block content %}
+<div class="container mt-4">
+    <h2>User Settings</h2>
+    <form method="post">
+        {{ form.hidden_tag() }}
+        <div class="form-group">
+            {{ form.total_study_time_weekday.label }}
+            {{ form.total_study_time_weekday(class="form-control") }}
+        </div>
+        <div class="form-group">
+            {{ form.total_study_time_weekend.label }}
+            {{ form.total_study_time_weekend(class="form-control") }}
+        </div>
+        <div class="form-group">
+            {{ form.completion_date.label }}
+            {{ form.completion_date(class="form-control") }}
+        </div>
+        {{ form.submit(class="btn btn-primary") }}
+    </form>
+</div>
+{% endblock %}

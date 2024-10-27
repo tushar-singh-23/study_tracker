@@ -7,24 +7,27 @@
             <tr>
                 <th>Lesson</th>
                 <th>Confidence Level</th>
-                <th>Next Review Date</th>
+                <th>Next Study Date</th>
                 <th>Last Studied</th>
                 <th>Notes</th>
-                <th>Actions</th>
             </tr>
         </thead>
         <tbody>
             {% for lesson in lessons %}
-            <tr>
+            <tr class="lesson-row" data-lesson-id="{{ lesson.lesson_id }}">
                 <td>{{ lesson.lesson_name }}</td>
-                <td>{{ lesson.confidence_level }}</td>
-                <td>{{ lesson.next_review_date or 'N/A' }}</td>
-                <td>{{ lesson.last_studied or 'N/A' }}</td>
-                <td>{{ lesson.notes or '' }}</td>
                 <td>
-                    <a href="{{ url_for('main.update_lesson', lesson_id=lesson.lesson_id) }}" class="btn btn-sm btn-primary">
-                        <i class="fas fa-edit"></i> Update
-                    </a>
+                    <div class="confidence-level" data-lesson-id="{{ lesson.lesson_id }}">
+                        {% for i in range(1, 11) %}
+                        <i class="fas fa-star confidence-star {% if i <= lesson.confidence_level %}selected{% endif %}" data-value="{{ i }}"></i>
+                        {% endfor %}
+                    </div>
+                </td>
+                <td>
+                    <input type="date" class="form-control last-studied" data-lesson-id="{{ lesson.lesson_id }}" value="{{ lesson.last_studied.strftime('%Y-%m-%d') if lesson.last_studied else '' }}">
+                </td>
+                <td>
+                    <textarea class="form-control notes" data-lesson-id="{{ lesson.lesson_id }}">{{ lesson.notes or '' }}</textarea>
                 </td>
             </tr>
             {% endfor %}
@@ -32,4 +35,114 @@
     </table>
     <a href="{{ url_for('main.index') }}" class="btn btn-secondary"><i class="fas fa-arrow-left"></i> Back</a>
 </div>
+
+<!-- Modal for Study History -->
+<div class="modal fade" id="studyHistoryModal" tabindex="-1" role="dialog" aria-labelledby="studyHistoryModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-lg" role="document">
+    <div class="modal-content">
+      <!-- Modal content will be loaded via AJAX -->
+    </div>
+  </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // Handle row click to show study history
+    document.querySelectorAll('.lesson-row').forEach(function(row) {
+        row.addEventListener('click', function(event) {
+            // Prevent the event from triggering other click handlers
+            if (event.target.closest('.confidence-level') || event.target.closest('.save-button') || event.target.closest('.last-studied') || event.target.closest('.notes')) {
+                return;
+            }
+            var lessonId = this.getAttribute('data-lesson-id');
+            // Load study history via AJAX
+            fetch('/study_history/' + lessonId)
+            .then(response => response.text())
+            .then(html => {
+                document.querySelector('#studyHistoryModal .modal-content').innerHTML = html;
+                $('#studyHistoryModal').modal('show');
+            });
+        });
+    });
+});
+// Handle confidence level selection with stars
+document.querySelectorAll('.confidence-level').forEach(function(container) {
+    var stars = container.querySelectorAll('.confidence-star');
+    stars.forEach(function(star) {
+        star.addEventListener('click', function(event) {
+            event.stopPropagation(); // Prevent triggering row click
+            var value = parseInt(this.getAttribute('data-value'));
+            // Update visual selection
+            stars.forEach(function(s) {
+                if (parseInt(s.getAttribute('data-value')) <= value) {
+                    s.classList.add('selected');
+                } else {
+                    s.classList.remove('selected');
+                }
+            });
+        });
+
+        star.addEventListener('mouseover', function() {
+            var value = parseInt(this.getAttribute('data-value'));
+            // Highlight stars on hover
+            stars.forEach(function(s) {
+                if (parseInt(s.getAttribute('data-value')) <= value) {
+                    s.classList.add('hovered');
+                } else {
+                    s.classList.remove('hovered');
+                }
+            });
+        });
+
+        star.addEventListener('mouseout', function() {
+            // Remove hover effect
+            stars.forEach(function(s) {
+                s.classList.remove('hovered');
+            });
+        });
+    });
+});
+
+// Modify the save button handler to retrieve the selected confidence level
+document.querySelectorAll('.save-button').forEach(function(button) {
+    button.addEventListener('click', function(event) {
+        event.stopPropagation(); // Prevent triggering row click
+        var lessonId = this.getAttribute('data-lesson-id');
+        var stars = document.querySelectorAll('.confidence-level[data-lesson-id="' + lessonId + '"] .confidence-star');
+        var confidenceLevel = 0;
+        stars.forEach(function(star) {
+            if (star.classList.contains('selected')) {
+                confidenceLevel = parseInt(star.getAttribute('data-value'));
+            }
+        });
+        var lastStudied = document.querySelector('.last-studied[data-lesson-id="' + lessonId + '"]').value;
+        var notes = document.querySelector('.notes[data-lesson-id="' + lessonId + '"]').value;
+
+        // Send data via AJAX
+        fetch('/update_lesson_inline', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRFToken': '{{ csrf_token() }}'
+            },
+            body: JSON.stringify({
+                lesson_id: lessonId,
+                confidence_level: confidenceLevel,
+                last_studied: lastStudied,
+                notes: notes
+            })
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                alert('Lesson updated successfully.');
+            } else {
+                alert('An error occurred.');
+            }
+        });
+    });
+});
+</script>
 {% endblock %}

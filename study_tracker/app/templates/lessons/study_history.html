@@ -1,0 +1,25 @@
+{% extends 'base.html' %}
+{% block content %}
+<div class="container mt-4">
+    <h2>{{ lesson_details.lesson_name }} ({{ lesson_details.topic }}) - Study History</h2>
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th>Date Studied</th>
+                <th>Study Time (minutes)</th>
+                <th>Notes</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for study in study_dates %}
+            <tr>
+                <td>{{ study.date }}</td>
+                <td>{{ study.study_time }}</td>
+                <td>{{ study.notes or 'N/A' }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    <a href="{{ url_for('main.schedule') }}" class="btn btn-secondary"><i class="fas fa-arrow-left"></i> Back to Schedule</a>
+</div>
+{% endblock %}
